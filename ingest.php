@@ -28,6 +28,7 @@ if(!is_array($decoded)){
     echo 'Data not in JSON format';
 }
 
+$data = $decoded->data;
 // /Set up Kafka Producer 
 $config = \Kafka\ProducerConfig::getInstance();
 $config->setMetadataRefreshIntervalMs(10000);
