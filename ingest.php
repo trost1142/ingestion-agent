@@ -1,7 +1,6 @@
 <?php
-require '/home/kafka/kafka/vendor/autoload.php';
-use Kafka\Protocol;
-use Kafka\Socket;
+require '/etc/kafka/kafka/vendor/autoload.php';
+
 date_default_timezone_set('UTC');
 
 // Verify that HTTP request method is POST
@@ -43,10 +42,19 @@ $producer = new \Kafka\Producer();
 // Add endpoint method, url and timestamp
 foreach($data as $item) {
     var_dump($item);
-    $now_time = date("Y.m.d H:i:s");
+    $now = DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''));
+    $utc_time = $now->setTimeZone(new DateTimeZone('UTC'));
+    $utc_formatted = $utc_time->format("Y-m-d H:i:s.u");
+    echo $utc_formatted;
+    echo "\n";
+    foreach($item as $key => $value) {
+        $item->data->$key = $value;
+    }
+    unset($item->data->data);
     $item->endpoint_method = $decoded->endpoint->method;
     $item->endpoint_url = $decoded->endpoint->url;
-    $item->start_time = $now_time;
+    $item->start_time = $utc_formatted;
+    var_dump($item);
     
     $producer->send([
         [
