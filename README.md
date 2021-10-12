@@ -15,9 +15,9 @@ Ingestion Agent Workflow:
 2. Decode request payload (must be JSON)
 3. Create Kafka Producer
 4. For Each JSON object found in the "data" section (see Sample Request):
-   a. Create timestamp with milliseconds accuracy and in UTC timezone
-   b. Add "data" section, "endpoint_method", "endpoint_url", and "start_time" key:value pairs to JSON object
-   c. Send object through Kafka producer
+   - Create timestamp with milliseconds accuracy and in UTC timezone
+   - Add "data" section, "endpoint_method", "endpoint_url", and "start_time" key:value pairs to JSON object
+   - Send object through Kafka producer
    
 Object Consruction:
 -------------------------
