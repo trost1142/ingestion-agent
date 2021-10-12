@@ -22,11 +22,6 @@ $json = file_get_contents('php://input');
 // Convert request payload to PHP array
 $decoded = json_decode($json);
 
-// Verify request payload is was valid JSON
-if(!is_array($decoded)){
-    echo 'Data not in JSON format';
-}
-
 $data = $decoded->data;
 // /Set up Kafka Producer 
 $config = \Kafka\ProducerConfig::getInstance();
@@ -41,12 +36,10 @@ $producer = new \Kafka\Producer();
 // Send data postback object for each object in $data
 // Add endpoint method, url and timestamp
 foreach($data as $item) {
-    var_dump($item);
     $now = DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''));
     $utc_time = $now->setTimeZone(new DateTimeZone('UTC'));
     $utc_formatted = $utc_time->format("Y-m-d H:i:s.u");
-    echo $utc_formatted;
-    echo "\n";
+    
     foreach($item as $key => $value) {
         $item->data->$key = $value;
     }
@@ -54,7 +47,6 @@ foreach($data as $item) {
     $item->endpoint_method = $decoded->endpoint->method;
     $item->endpoint_url = $decoded->endpoint->url;
     $item->start_time = $utc_formatted;
-    var_dump($item);
     
     $producer->send([
         [
